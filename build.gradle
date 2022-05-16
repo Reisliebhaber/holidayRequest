@@ -1,0 +1,34 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.7'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.workflow'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//implementation 'org.flowable:flowable-root:6.7.2'
+	// https://mvnrepository.com/artifact/org.flowable/flowable-spring-boot-starter
+	implementation 'org.flowable:flowable-spring-boot-starter:6.7.2'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
