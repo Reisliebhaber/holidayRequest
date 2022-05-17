@@ -6,7 +6,7 @@
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
 
-    <process id="holidayRequest" name="Holiday Request" isExecutable="true">
+    <process id="oldHolidayRequest" name="Holiday Request" isExecutable="true">
 
         <startEvent id="startEvent"/>
         <sequenceFlow sourceRef="startEvent" targetRef="approveTask"/>
@@ -27,14 +27,14 @@
         </sequenceFlow>
 
         <serviceTask id="externalSystemCall" name="Process after approval"
-                     flowable:class="com.workflow.handler.HolidayApprovalHandler"/>
+                     flowable:class="com.workflow.oldHandler.HolidayApprovalHandler"/>
         <sequenceFlow sourceRef="externalSystemCall" targetRef="holidayApprovedTask"/>
 
         <userTask id="holidayApprovedTask" name="Holiday approved" flowable:assignee="${employee}"/>
         <sequenceFlow sourceRef="holidayApprovedTask" targetRef="approveEnd"/>
 
         <serviceTask id="sendRejectionMail" name="Process After Rejction"
-                     flowable:class="com.workflow.handler.HolidayRejectionHandler"/>
+                     flowable:class="com.workflow.oldHandler.HolidayRejectionHandler"/>
         <sequenceFlow sourceRef="sendRejectionMail" targetRef="rejectEnd"/>
 
         <endEvent id="approveEnd"/>

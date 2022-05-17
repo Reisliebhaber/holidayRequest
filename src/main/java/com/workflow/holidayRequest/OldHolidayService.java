@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.workflow.dto.HolidayRequest;
-import com.workflow.dto.ProcessInstanceResponse;
-import com.workflow.dto.TaskDetails;
+import com.workflow.oldDto.OldHolidayRequest;
+import com.workflow.oldDto.OldProcessInstanceResponse;
+import com.workflow.oldDto.OldTaskDetails;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class HolidayService {
+public class OldHolidayService {
     public static final String TASK_CANDIDATE_GROUP = "managers";
-    public static final String PROCESS_DEFINITION_KEY = "holidayRequest";
+    public static final String PROCESS_DEFINITION_KEY = "oldHolidayRequest";
     public static final String EMP_NAME = "empName";
     RuntimeService runtimeService;
     TaskService taskService;
@@ -51,35 +51,35 @@ public class HolidayService {
 
     //********************************************************** process service methods **********************************************************
 
-    public ProcessInstanceResponse applyHoliday(HolidayRequest holidayRequest) {
+    public OldProcessInstanceResponse applyHoliday(OldHolidayRequest oldHolidayRequest) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("employee", holidayRequest.getEmpName());
-        variables.put("noOfHolidays", holidayRequest.getNoOfHolidays());
-        variables.put("description", holidayRequest.getRequestDescription());
+        variables.put("employee", oldHolidayRequest.getEmpName());
+        variables.put("noOfHolidays", oldHolidayRequest.getNoOfHolidays());
+        variables.put("description", oldHolidayRequest.getRequestDescription());
 
         ProcessInstance processInstance =
                 runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, variables);
 
-        return new ProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
+        return new OldProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
     }
 
 
-    public List<TaskDetails> getManagerTasks() {
+    public List<OldTaskDetails> getManagerTasks() {
         List<Task> tasks =
                 taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP).list();
-        List<TaskDetails> taskDetails = getTaskDetails(tasks);
+        List<OldTaskDetails> oldTaskDetails = getTaskDetails(tasks);
 
-        return taskDetails;
+        return oldTaskDetails;
     }
 
-    private List<TaskDetails> getTaskDetails(List<Task> tasks) {
-        List<TaskDetails> taskDetails = new ArrayList<>();
+    private List<OldTaskDetails> getTaskDetails(List<Task> tasks) {
+        List<OldTaskDetails> oldTaskDetails = new ArrayList<>();
         for (Task task : tasks) {
             Map<String, Object> processVariables = taskService.getVariables(task.getId());
-            taskDetails.add(new TaskDetails(task.getId(), task.getName(), processVariables));
+            oldTaskDetails.add(new OldTaskDetails(task.getId(), task.getName(), processVariables));
         }
-        return taskDetails;
+        return oldTaskDetails;
     }
 
 
@@ -95,12 +95,12 @@ public class HolidayService {
     }
 
 
-    public List<TaskDetails> getUserTasks() {
+    public List<OldTaskDetails> getUserTasks() {
 
         List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(EMP_NAME).list();
-        List<TaskDetails> taskDetails = getTaskDetails(tasks);
+        List<OldTaskDetails> oldTaskDetails = getTaskDetails(tasks);
 
-        return taskDetails;
+        return oldTaskDetails;
     }
 
     /**

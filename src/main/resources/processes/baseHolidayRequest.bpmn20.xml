@@ -6,14 +6,14 @@
              typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler"
              exporterVersion="6.7.2">
-    <process id="baseHolidayRequest" name="baseHolidayRequest" isExecutable="true">
+    <process id="holidayRequest" name="holidayRequest" isExecutable="true">
         <documentation>BaseWorkflow for an holiday request of an employee.
             Roles: employee, superior,substitute
-        </documentation> <!--
-        <startEvent id="startEvent1" flowable:formFieldValidation="true"></startEvent>
+        </documentation>
+        <startEvent id="startEvent"/><!--
         <userTask id="sid-567CA172-0F22-4187-B85D-0E91F2A5229D" name="Holiday Request"
                   flowable:formFieldValidation="true"></userTask>
-        <sequenceFlow id="sid-2BA5D365-AF2A-483B-B2B0-92FE4FED6BE2" sourceRef="startEvent1"
+        <sequenceFlow id="sid-2BA5D365-AF2A-483B-B2B0-92FE4FED6BE2" sourceRef="startEvent"
                       targetRef="sid-567CA172-0F22-4187-B85D-0E91F2A5229D"></sequenceFlow>
         <exclusiveGateway id="sid-2B3CF882-A152-456A-BA7D-E7809A814366"
                           name="with or without Substitute"></exclusiveGateway>

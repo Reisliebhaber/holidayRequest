@@ -1,4 +1,4 @@
-package com.workflow.dto;
+package com.workflow.holidayRequest.dto;
 
 import lombok.Data;
 
@@ -11,5 +11,5 @@ public class HolidayRequest {
 
     String requestDescription;
 
-
+    boolean substitute;
 }
