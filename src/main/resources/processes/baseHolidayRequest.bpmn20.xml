@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler"
+             exporterVersion="6.7.2">
+    <process id="baseHolidayRequest" name="baseHolidayRequest" isExecutable="true">
+        <documentation>BaseWorkflow for an holiday request of an employee.
+            Roles: employee, superior,substitute
+        </documentation> <!--
+        <startEvent id="startEvent1" flowable:formFieldValidation="true"></startEvent>
+        <userTask id="sid-567CA172-0F22-4187-B85D-0E91F2A5229D" name="Holiday Request"
+                  flowable:formFieldValidation="true"></userTask>
+        <sequenceFlow id="sid-2BA5D365-AF2A-483B-B2B0-92FE4FED6BE2" sourceRef="startEvent1"
+                      targetRef="sid-567CA172-0F22-4187-B85D-0E91F2A5229D"></sequenceFlow>
+        <exclusiveGateway id="sid-2B3CF882-A152-456A-BA7D-E7809A814366"
+                          name="with or without Substitute"></exclusiveGateway>
+        <exclusiveGateway id="sid-783B2295-7E28-4319-A087-CC3EFCC2C4B4"
+                          name="Reject or Accept Substitution"></exclusiveGateway>
+        <sequenceFlow id="sid-F1DE8551-EA43-4790-8CC1-ABA314CE61D6" sourceRef="sid-567CA172-0F22-4187-B85D-0E91F2A5229D"
+                      targetRef="sid-2B3CF882-A152-456A-BA7D-E7809A814366"></sequenceFlow>
+        <exclusiveGateway id="sid-5E10E7DF-8841-48E1-A0A9-CF44022104D7"></exclusiveGateway>
+        <exclusiveGateway id="sid-C6E41E5E-34AF-4545-86EE-12B4C128AE93"
+                          name="Reject or Accept Holiday Request"></exclusiveGateway>
+        <sequenceFlow id="sid-7C993880-6714-4EDF-85A6-436967A3CDB5" name="Acceptance"
+                      sourceRef="sid-783B2295-7E28-4319-A087-CC3EFCC2C4B4"
+                      targetRef="sid-D6F89A2C-435F-43B1-B88F-A8F20ABC8E79"></sequenceFlow>
+        <sequenceFlow id="sid-CDA573A3-72F9-4B79-AE72-9268E3F84FEF" name="Rejection"
+                      sourceRef="sid-5E10E7DF-8841-48E1-A0A9-CF44022104D7"
+                      targetRef="sid-567CA172-0F22-4187-B85D-0E91F2A5229D"></sequenceFlow>
+        <sequenceFlow id="sid-8A4AB7D2-6EFE-4D40-8B49-EE83D8D37943" name="Rejection"
+                      sourceRef="sid-783B2295-7E28-4319-A087-CC3EFCC2C4B4"
+                      targetRef="sid-567CA172-0F22-4187-B85D-0E91F2A5229D"></sequenceFlow>
+        <sequenceFlow id="sid-9D7C4535-2216-4DF8-9FCD-78F547490D24" name="Reject"
+                      sourceRef="sid-C6E41E5E-34AF-4545-86EE-12B4C128AE93"
+                      targetRef="sid-963C1766-C2CA-462B-B14B-793F42D01BDE"></sequenceFlow>
+        <sequenceFlow id="sid-ACF769F8-250A-4C88-BA90-6D1A21AFEC77" name="Accept"
+                      sourceRef="sid-C6E41E5E-34AF-4545-86EE-12B4C128AE93"
+                      targetRef="sid-9481ED96-B481-49A0-8F4B-06289B55733B"></sequenceFlow>
+        <serviceTask id="sid-DEDFFA4E-A469-4FDE-A876-EC84A550A6B1" name="Notify Employee"></serviceTask>
+        <serviceTask id="sid-CC87807E-0217-4128-81FC-96DE92D69C16" name="Forwarding to Substitute"></serviceTask>
+        <serviceTask id="sid-D6F89A2C-435F-43B1-B88F-A8F20ABC8E79" name="Forwarding to Superior"></serviceTask>
+        <serviceTask id="sid-A024ADAE-F799-44C6-9C39-797F7BE794E4" name="Forwarding to HR department"></serviceTask>
+        <serviceTask id="sid-963C1766-C2CA-462B-B14B-793F42D01BDE" name="Holiday Request rejected"></serviceTask>
+        <serviceTask id="sid-9481ED96-B481-49A0-8F4B-06289B55733B" name="Holiday Request accepted"></serviceTask>
+        <serviceTask id="sid-1E89411A-CBC9-4184-8E2B-8D8254E9EC74" name="Send E-Mail to Employee"
+                     flowable:type="mail"></serviceTask>
+        <sequenceFlow id="sid-FE1B06F5-54AB-44D1-9E41-320292DFD851" name="without Substitute"
+                      sourceRef="sid-2B3CF882-A152-456A-BA7D-E7809A814366"
+                      targetRef="sid-D6F89A2C-435F-43B1-B88F-A8F20ABC8E79"></sequenceFlow>
+        <sequenceFlow id="sid-E266C5DB-6A2F-4019-92CE-6609300567A7" name="Approval"
+                      sourceRef="sid-5E10E7DF-8841-48E1-A0A9-CF44022104D7"
+                      targetRef="sid-A024ADAE-F799-44C6-9C39-797F7BE794E4"></sequenceFlow>
+        <sequenceFlow id="sid-557866B6-F1E0-4293-BD8D-C36158F5D329" sourceRef="sid-1E89411A-CBC9-4184-8E2B-8D8254E9EC74"
+                      targetRef="sid-DEDFFA4E-A469-4FDE-A876-EC84A550A6B1"></sequenceFlow>
+        <sequenceFlow id="sid-FFEF21B5-9103-4C7E-9504-4D2691786C7F" sourceRef="sid-9481ED96-B481-49A0-8F4B-06289B55733B"
+                      targetRef="sid-1E89411A-CBC9-4184-8E2B-8D8254E9EC74"></sequenceFlow>
+        <sequenceFlow id="sid-730D3F21-F516-4B70-A39B-657C89F6C3E5" sourceRef="sid-963C1766-C2CA-462B-B14B-793F42D01BDE"
+                      targetRef="sid-1E89411A-CBC9-4184-8E2B-8D8254E9EC74"></sequenceFlow>
+        <sequenceFlow id="sid-EE29B999-767F-4B30-9BFA-487F0D8831E7" sourceRef="sid-DEDFFA4E-A469-4FDE-A876-EC84A550A6B1"
+                      targetRef="sid-22576EB7-19E5-4287-A97D-4DE94AB6B090"></sequenceFlow>
+        <endEvent id="sid-22576EB7-19E5-4287-A97D-4DE94AB6B090"></endEvent>
+        <userTask id="sid-BBE14145-A380-49A8-82FC-A2C95B486529" name="Reject or Accept Substitution"
+                  flowable:formFieldValidation="true"></userTask>
+        <userTask id="sid-4EDB2934-94D5-485D-9E7C-11A209A757BC" name="Reject or Accept Holiday Request"
+                  flowable:formFieldValidation="true"></userTask>
+        <sequenceFlow id="sid-CFBE3641-E7D6-4241-89D4-5D57E3C0C1C4" sourceRef="sid-BBE14145-A380-49A8-82FC-A2C95B486529"
+                      targetRef="sid-783B2295-7E28-4319-A087-CC3EFCC2C4B4"></sequenceFlow>
+        <sequenceFlow id="sid-AD2BB30E-34B7-4F7F-801A-A4BC67A0C10B" sourceRef="sid-D6F89A2C-435F-43B1-B88F-A8F20ABC8E79"
+                      targetRef="sid-4EDB2934-94D5-485D-9E7C-11A209A757BC"></sequenceFlow>
+        <sequenceFlow id="sid-03DA530E-6DA7-41C6-90DD-2A8329672CC5" sourceRef="sid-4EDB2934-94D5-485D-9E7C-11A209A757BC"
+                      targetRef="sid-5E10E7DF-8841-48E1-A0A9-CF44022104D7"></sequenceFlow>
+        <userTask id="sid-7476A9EB-75D3-49A0-ADE3-6D8E70F122D4" name="Reject or Accept Holiday Request"
+                  flowable:formFieldValidation="true"></userTask>
+        <sequenceFlow id="sid-74E11FFF-9ACA-4532-A338-B16A942CA66F" sourceRef="sid-A024ADAE-F799-44C6-9C39-797F7BE794E4"
+                      targetRef="sid-7476A9EB-75D3-49A0-ADE3-6D8E70F122D4"></sequenceFlow>
+        <sequenceFlow id="sid-1088B43F-EA5C-41A8-9A1B-60AE217BFE8D" sourceRef="sid-7476A9EB-75D3-49A0-ADE3-6D8E70F122D4"
+                      targetRef="sid-C6E41E5E-34AF-4545-86EE-12B4C128AE93"></sequenceFlow>
+        <sequenceFlow id="sid-2BD0766A-9D81-48FE-9AB2-71E3F51FC19D" sourceRef="sid-CC87807E-0217-4128-81FC-96DE92D69C16"
+                      targetRef="sid-BBE14145-A380-49A8-82FC-A2C95B486529"></sequenceFlow>
+        <sequenceFlow id="sid-F03F6458-7F03-41FC-91A6-B15D09F423C0" name="with Substitute"
+                      sourceRef="sid-2B3CF882-A152-456A-BA7D-E7809A814366"
+                      targetRef="sid-CC87807E-0217-4128-81FC-96DE92D69C16"></sequenceFlow> -->
+    </process>
+</definitions>
