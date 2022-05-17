@@ -27,6 +27,8 @@ dependencies {
 	//implementation 'org.flowable:flowable-root:6.7.2'
 	// https://mvnrepository.com/artifact/org.flowable/flowable-spring-boot-starter
 	implementation 'org.flowable:flowable-spring-boot-starter:6.7.2'
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools
+	implementation 'org.springframework.boot:spring-boot-devtools:2.6.7'
 }
 
 tasks.named('test') {
