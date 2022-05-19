@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler"
+             exporterVersion="6.7.2">
+    <process id="holidayRequestWorkflow" name="holidayRequestWorkflow" isExecutable="true">
+        <documentation>Workflow for an holiday request of an employee.</documentation><!--
+        <startEvent id="startEvent"/>
+        <sequenceFlow sourceRef="startEvent"
+                      targetRef="holidayRequest"/>
+        <userTask id="holidayRequest" name="Holiday Request"/>
+        <exclusiveGateway id="gwWithOrWithoutSubstitute"
+                          name="with or without Substitute"/>
+        <exclusiveGateway id="gwRejectOrAcceptSubstitution"
+                          name="Reject or Accept Substitution"/>
+        <endEvent id="endRejection"/>
+        <userTask id="taskRejectAcceptSubstitution" name="Reject or Accept Substitution"/>
+        <userTask id="taskRejectAcceptSuperior" name="Reject or Accept Holiday Request Superior"/>
+        <exclusiveGateway id="gwRejectOrAcceptSuperior"/>
+        <serviceTask id="notifyHrDepartment" name="Notify HR department"/>
+        <serviceTask id="notifyEmployee" name="Notify Employee"/>
+        <endEvent id="endNotifyEmployee"/>
+        <sequenceFlow sourceRef="taskRejectAcceptSubstitution"
+                      targetRef="gwRejectOrAcceptSubstitution"/>
+        <sequenceFlow sourceRef="holidayRequest"
+                      targetRef="gwWithOrWithoutSubstitute"/>
+        <sequenceFlow name="Acceptance"
+                      sourceRef="gwRejectOrAcceptSubstitution"
+                      targetRef="taskRejectAcceptSuperior"/>
+        <sequenceFlow sourceRef="taskRejectAcceptSuperior"
+                      targetRef="gwRejectOrAcceptSuperior"/>
+        <sequenceFlow name="Approval"
+                      sourceRef="gwRejectOrAcceptSuperior"
+                      targetRef="parallelNotifyEmployeeHrDepartment"/>
+        <sequenceFlow sourceRef="notifyEmployee"
+                      targetRef="endNotifyEmployee"/>
+        <endEvent id="endNotifyHrDepartment"/>
+        <sequenceFlow sourceRef="notifyHrDepartment"
+                      targetRef="endNotifyHrDepartment"/>
+        <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment"
+                      targetRef="notifyHrDepartment"/>
+        <parallelGateway id="parallelNotifyEmployeeHrDepartment"/>
+        <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment"
+                      targetRef="notifyEmployee"/>
+        <sequenceFlow name="without Substitute"
+                      sourceRef="gwWithOrWithoutSubstitute"
+                      targetRef="taskRejectAcceptSuperior"/>
+        <sequenceFlow name="with Substitute"
+                      sourceRef="gwWithOrWithoutSubstitute"
+                      targetRef="taskRejectAcceptSubstitution"/>
+        <sequenceFlow name="Rejection"
+                      sourceRef="gwRejectOrAcceptSubstitution" targetRef="endRejection"/>
+        <sequenceFlow name="Rejection"
+                      sourceRef="gwRejectOrAcceptSuperior" targetRef="endRejection"/>-->
+    </process>
+</definitions>

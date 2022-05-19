@@ -19,18 +19,12 @@ public class HolidayRequestController {
     HolidayService holidayService;
     OldHolidayService oldHolidayService;//todo delete
 
-    //********************************************************** deployment endpoints **********************************************************
-    @PostMapping("/deploy")
-    public void deployWorkflow() {
-        holidayService.deployProcessDefinition();
-    }
-
-    //********************************************************** process endpoints **********************************************************
+    //********************************************************** deployment & process endpoints **************************************
     @PostMapping("/holiday/apply")
     public OldProcessInstanceResponse applyHoliday(@RequestBody OldHolidayRequest oldHolidayRequest) {
+        holidayService.deployProcessDefinition();
         return oldHolidayService.applyHoliday(oldHolidayRequest);
     }
-
 
     @GetMapping("/manager/tasks")
     public List<OldTaskDetails> getTasks() {

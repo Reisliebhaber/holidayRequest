@@ -1,9 +1,6 @@
 package com.workflow.holidayRequest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.workflow.oldDto.OldHolidayRequest;
 import com.workflow.oldDto.OldProcessInstanceResponse;
@@ -85,9 +82,15 @@ public class OldHolidayService {
 
     public void approveHoliday(String taskId, Boolean approved) {
 
+        Task test = taskService.createTaskQuery().taskId(taskId).singleResult();
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("approved", approved.booleanValue());
         taskService.complete(taskId, variables);
+        Map<String, Object> testingVariables = taskService.getVariables(taskId);
+        /*
+        test = taskService.createTaskQuery().taskId(taskId).singleResult();
+        Collection<String> currentVariables = taskService.getVariablesLocal((test.getId())).keySet();*/
+
     }
 
     public void acceptHoliday(String taskId) {
@@ -96,7 +99,7 @@ public class OldHolidayService {
 
 
     public List<OldTaskDetails> getUserTasks() {
-
+        //TODO normally EMP_NAME => real employee name
         List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(EMP_NAME).list();
         List<OldTaskDetails> oldTaskDetails = getTaskDetails(tasks);
 

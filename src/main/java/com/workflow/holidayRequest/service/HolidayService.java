@@ -26,7 +26,7 @@ import java.util.Map;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class HolidayService {
     public static final String TASK_CANDIDATE_GROUP = "managers";
-    public static final String PROCESS_DEFINITION_KEY = "holidayRequest";
+    public static final String PROCESS_DEFINITION_KEY = "holidayRequestWorkflow";
     public static final String EMP_NAME = "empName";
 
     RuntimeService runtimeService;

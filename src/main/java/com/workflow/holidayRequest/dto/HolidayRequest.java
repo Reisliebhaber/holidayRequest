@@ -2,6 +2,8 @@ package com.workflow.holidayRequest.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class HolidayRequest {
 
@@ -10,6 +12,8 @@ public class HolidayRequest {
     Long noOfHolidays;
 
     String requestDescription;
+
+    Date startingDate;
 
     boolean substitute;
 }
