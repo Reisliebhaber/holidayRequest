@@ -7,13 +7,34 @@
              targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler"
              exporterVersion="6.7.2">
     <process id="holidayRequestWorkflow" name="holidayRequestWorkflow" isExecutable="true">
-        <documentation>Workflow for an holiday request of an employee.</documentation><!--
+        <documentation>Workflow for an holiday request of an employee.</documentation>
         <startEvent id="startEvent"/>
-        <sequenceFlow sourceRef="startEvent"
-                      targetRef="holidayRequest"/>
+        <sequenceFlow sourceRef="startEvent" targetRef="holidayRequest"/>
+
         <userTask id="holidayRequest" name="Holiday Request"/>
+        <sequenceFlow sourceRef="holidayRequest" targetRef="AddOneOrNoneSubstitute"/>
+        <userTask id="AddOneOrNoneSubstitute" name="Add one or none substitute" flowable:candidateGroups="employee"/>
+        <sequenceFlow sourceRef="AddOneOrNoneSubstitute"
+                      targetRef="gwWithOrWithoutSubstitute"/>
         <exclusiveGateway id="gwWithOrWithoutSubstitute"
                           name="with or without Substitute"/>
+        <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="testService0">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${var:exists(employeeId)}]]>
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="testService1">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${!var:exists(employeeId)}]]>
+            </conditionExpression>
+        </sequenceFlow>
+        <serviceTask id="testService0" name="Gateway true"
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler"/>
+        <serviceTask id="testService1" name="Gateway false"
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayRejectionHandler"/>
+        <!--
+        <endEvent id="testEnd1"/>
+        <endEvent id="testEnd12"/>
         <exclusiveGateway id="gwRejectOrAcceptSubstitution"
                           name="Reject or Accept Substitution"/>
         <endEvent id="endRejection"/>
@@ -25,8 +46,6 @@
         <endEvent id="endNotifyEmployee"/>
         <sequenceFlow sourceRef="taskRejectAcceptSubstitution"
                       targetRef="gwRejectOrAcceptSubstitution"/>
-        <sequenceFlow sourceRef="holidayRequest"
-                      targetRef="gwWithOrWithoutSubstitute"/>
         <sequenceFlow name="Acceptance"
                       sourceRef="gwRejectOrAcceptSubstitution"
                       targetRef="taskRejectAcceptSuperior"/>

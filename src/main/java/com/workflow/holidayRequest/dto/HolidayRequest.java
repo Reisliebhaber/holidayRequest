@@ -2,7 +2,7 @@ package com.workflow.holidayRequest.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class HolidayRequest {
@@ -13,7 +13,5 @@ public class HolidayRequest {
 
     String requestDescription;
 
-    Date startingDate;
-
-    boolean substitute;
+    LocalDate startingDate;
 }

@@ -1,8 +1,10 @@
 package com.workflow.holidayRequest.service;
 
-import com.workflow.oldDto.OldHolidayRequest;
-import com.workflow.oldDto.OldProcessInstanceResponse;
+import com.workflow.holidayRequest.dto.HolidayRequest;
+import com.workflow.holidayRequest.dto.ProcessInstanceResponse;
+import com.workflow.holidayRequest.dto.TaskDetails;
 import com.workflow.oldDto.OldTaskDetails;
+import liquibase.pro.packaged.T;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,8 +27,10 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class HolidayService {
-    public static final String TASK_CANDIDATE_GROUP = "managers";
     public static final String PROCESS_DEFINITION_KEY = "holidayRequestWorkflow";
+    public static final String TASK_CANDIDATE_GROUP_SUPERIOR = "superior";
+    public static final String TASK_CANDIDATE_GROUP_SUBSTITUTE = "substitute";
+    public static final String TASK_CANDIDATE_GROUP_EMPLOYEE = "employee";
     public static final String EMP_NAME = "empName";
 
     RuntimeService runtimeService;
@@ -42,7 +46,7 @@ public class HolidayService {
         Deployment deployment =
                 repositoryService
                         .createDeployment()
-                        .addClasspathResource("processes/holiday-request.bpmn20.xml")//TODO richtiges verzeichnis?
+                        .addClasspathResource("processes/holiday-request.bpmn20.xml")
                         .deploy();
 
 
@@ -51,43 +55,73 @@ public class HolidayService {
 
     //********************************************************** process service methods **********************************************************
 
-    public OldProcessInstanceResponse applyHoliday(OldHolidayRequest oldHolidayRequest) {
+    public ProcessInstanceResponse applyHoliday(HolidayRequest holidayRequest) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("employee", oldHolidayRequest.getEmpName());
-        variables.put("noOfHolidays", oldHolidayRequest.getNoOfHolidays());
-        variables.put("description", oldHolidayRequest.getRequestDescription());
+        variables.put("employee", holidayRequest.getEmpName());
+        variables.put("noOfHolidays", holidayRequest.getNoOfHolidays());
+        variables.put("description", holidayRequest.getRequestDescription());
+        variables.put("startingDate", holidayRequest.getStartingDate());
 
         ProcessInstance processInstance =
-                runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, variables);
-
-        return new OldProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
+                runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
+        Task holidayRequestTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
+        taskService.complete(holidayRequestTask.getId(), variables);
+        ProcessInstanceResponse response = new ProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
+        //taskService.complete(taskId);
+        return response;
     }
 
-
-    public List<OldTaskDetails> getManagerTasks() {
+    public List<TaskDetails> getEmployeeTasks() {
         List<Task> tasks =
-                taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP).list();
-        List<OldTaskDetails> oldTaskDetails = getTaskDetails(tasks);
+                taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_EMPLOYEE).list();
+        List<TaskDetails> taskDetails = getTaskDetails(tasks);
 
-        return oldTaskDetails;
+        return taskDetails;
+    }
+    public void addSubstituteToHoliday(String taskId, Integer employeeId) {
+
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put("employeeId", employeeId);
+        taskService.complete(taskId, variables);
+        Map<String, Object> testingVariables = taskService.getVariables(taskId);
+        System.out.println("Short test addSubstituteToHoliday");
+        /*
+        Interesting Code examples:
+        test = taskService.createTaskQuery().taskId(taskId).singleResult();
+        Collection<String> currentVariables = taskService.getVariablesLocal((test.getId())).keySet();*/
     }
 
-    private List<OldTaskDetails> getTaskDetails(List<Task> tasks) {
-        List<OldTaskDetails> oldTaskDetails = new ArrayList<>();
+
+    public List<TaskDetails> getManagerTasks() {
+        List<Task> tasks =
+                taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_SUPERIOR).list();
+        List<TaskDetails> taskDetails = getTaskDetails(tasks);
+
+        return taskDetails;
+    }
+
+    private List<TaskDetails> getTaskDetails(List<Task> tasks) {
+        List<TaskDetails> taskDetails = new ArrayList<>();
         for (Task task : tasks) {
             Map<String, Object> processVariables = taskService.getVariables(task.getId());
-            oldTaskDetails.add(new OldTaskDetails(task.getId(), task.getName(), processVariables));
+            taskDetails.add(new TaskDetails(task.getId(), task.getName(), processVariables));
         }
-        return oldTaskDetails;
+        return taskDetails;
     }
 
 
     public void approveHoliday(String taskId, Boolean approved) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("approved", approved.booleanValue());
+        variables.put("withSubstitute", approved.booleanValue());
         taskService.complete(taskId, variables);
+        Map<String, Object> testingVariables = taskService.getVariables(taskId);
+        System.out.println("Short test MAXIMILIAN");
+        /*
+        Interesting Code examples:
+        test = taskService.createTaskQuery().taskId(taskId).singleResult();
+        Collection<String> currentVariables = taskService.getVariablesLocal((test.getId())).keySet();*/
     }
 
     public void acceptHoliday(String taskId) {
@@ -95,10 +129,10 @@ public class HolidayService {
     }
 
 
-    public List<OldTaskDetails> getUserTasks() {
+    public List<TaskDetails> getUserTasks() {
 
         List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(EMP_NAME).list();
-        List<OldTaskDetails> taskDetails = getTaskDetails(tasks);
+        List<TaskDetails> taskDetails = getTaskDetails(tasks);
 
         return taskDetails;
     }

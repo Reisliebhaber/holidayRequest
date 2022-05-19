@@ -11,6 +11,6 @@ public class HolidayApprovalHandler implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
 
-        log.info("Approved, sending an email");
+        log.info("Gateway true");
     }
 }
