@@ -7,10 +7,10 @@ import org.flowable.engine.delegate.JavaDelegate;
 
 @Data
 @Slf4j
-public class HolidayApprovalHandler implements JavaDelegate {
+public class HolidayNotifyHR implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
 
-        log.info("Notify HR & Employee");
+        log.info("Notify HR");
     }
 }

@@ -68,12 +68,12 @@
         <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment" targetRef="notifyEmployee"/>
 
         <serviceTask id="notifyHrDepartment" name="Notify HR department"
-                     flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler" />
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyHR" />
         <sequenceFlow sourceRef="notifyHrDepartment" targetRef="notifyHrDepartmentEnd"/>
         <endEvent id="notifyHrDepartmentEnd"/>
 
         <serviceTask id="notifyEmployee" name="Notify Employee"
-                     flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler" />
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyEmployee" />
         <sequenceFlow sourceRef="notifyEmployee" targetRef="notifyEmployeeEnd"/>
         <endEvent id="notifyEmployeeEnd"/>
 
@@ -84,7 +84,7 @@
         <endEvent id="rejectionEnd"/>
         <!--
         <serviceTask id="testService0" name="Gateway true"
-                     flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler"/>
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyEmployee"/>
         <sequenceFlow sourceRef="testService0" targetRef="rejectionEnd" />
         <sequenceFlow sourceRef="testService0" targetRef="rejectionEnd" />
         -->
