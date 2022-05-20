@@ -79,19 +79,11 @@ public class HolidayService {
 
         return taskDetails;
     }
-    public void addSubstituteToHoliday(String taskId, Integer employeeId) {
+    public void addSubstitute(String taskId, Boolean approved) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("employeeId", employeeId);
+        variables.put("withSubstitute", approved.booleanValue());
         taskService.complete(taskId, variables);
-        //Map<String, Object> testingVariables = taskService.getVariables(taskId);
-        /*
-        Interesting Code examples:
-        test = taskService.createTaskQuery().taskId(taskId).singleResult();
-        Collection<String> currentVariables = taskService.getVariablesLocal((test.getId())).keySet();*/
-    }
-    public void addNoSubstituteToHoliday(String taskId) {
-        taskService.complete(taskId);
     }
 
 
@@ -116,11 +108,11 @@ public class HolidayService {
     public void approveHoliday(String taskId, Boolean approved) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("withSubstitute", approved.booleanValue());
+        variables.put("withSubstitute", approved.booleanValue());//TODO change variable
         taskService.complete(taskId, variables);
-        Map<String, Object> testingVariables = taskService.getVariables(taskId);
+        /*Map<String, Object> testingVariables = taskService.getVariables(taskId);
         System.out.println("Short test MAXIMILIAN");
-        /*
+
         Interesting Code examples:
         test = taskService.createTaskQuery().taskId(taskId).singleResult();
         Collection<String> currentVariables = taskService.getVariablesLocal((test.getId())).keySet();*/

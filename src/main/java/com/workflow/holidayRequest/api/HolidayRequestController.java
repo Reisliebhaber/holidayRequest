@@ -34,14 +34,9 @@ public class HolidayRequestController {
         return holidayService.getEmployeeTasks();
     }
 
-    @PostMapping("/employee/addSubstitute/tasks/{taskId}/{employeeId}")
-    public void addSubstitute(@PathVariable("taskId") String taskId, @PathVariable("employeeId") Integer employeeId) {
-        holidayService.addSubstituteToHoliday(taskId, employeeId);
-    }
-    @PostMapping("/employee/noSubstitute/tasks/{taskId}")
-    public void addNoSubstitute(@PathVariable("taskId") String taskId) {
-        holidayService.addSubstituteToHoliday(taskId, null);
-        //holidayService.addNoSubstituteToHoliday(taskId);
+    @PostMapping("/employee/addSubstitute/tasks/{taskId}/{withSubstitute}")
+    public void addSubstitute(@PathVariable("taskId") String taskId, @PathVariable("withSubstitute") Boolean withSubstitute) {
+        holidayService.addSubstitute(taskId, withSubstitute);
     }
 
     @GetMapping("/superior/tasks")

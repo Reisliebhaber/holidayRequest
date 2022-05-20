@@ -19,12 +19,12 @@
         <exclusiveGateway id="gwWithOrWithoutSubstitute" name="with or without Substitute"/>
         <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="testService0">
             <conditionExpression xsi:type="tFormalExpression">
-                <![CDATA[${var:exists(employeeId)}]]>
+                <![CDATA[${withSubstitute}]]>
             </conditionExpression>
         </sequenceFlow>
         <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="testService1">
             <conditionExpression xsi:type="tFormalExpression">
-                <![CDATA[${var:exists(employeeId)}]]>
+                <![CDATA[${!withSubstitute}]]>
             </conditionExpression>
         </sequenceFlow>
         <serviceTask id="testService0" name="Gateway true"
