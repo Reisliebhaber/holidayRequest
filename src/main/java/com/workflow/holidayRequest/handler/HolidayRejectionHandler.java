@@ -12,7 +12,7 @@ public class HolidayRejectionHandler implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
 
-        log.info("Gateway true");
+        log.info("Gateway false");
 
     }
 }

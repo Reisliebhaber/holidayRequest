@@ -14,10 +14,9 @@
         <userTask id="holidayRequest" name="Holiday Request"/>
         <sequenceFlow sourceRef="holidayRequest" targetRef="AddOneOrNoneSubstitute"/>
         <userTask id="AddOneOrNoneSubstitute" name="Add one or none substitute" flowable:candidateGroups="employee"/>
-        <sequenceFlow sourceRef="AddOneOrNoneSubstitute"
-                      targetRef="gwWithOrWithoutSubstitute"/>
-        <exclusiveGateway id="gwWithOrWithoutSubstitute"
-                          name="with or without Substitute"/>
+        <sequenceFlow sourceRef="AddOneOrNoneSubstitute" targetRef="gwWithOrWithoutSubstitute"/>
+
+        <exclusiveGateway id="gwWithOrWithoutSubstitute" name="with or without Substitute"/>
         <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="testService0">
             <conditionExpression xsi:type="tFormalExpression">
                 <![CDATA[${var:exists(employeeId)}]]>
@@ -25,13 +24,16 @@
         </sequenceFlow>
         <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="testService1">
             <conditionExpression xsi:type="tFormalExpression">
-                <![CDATA[${!var:exists(employeeId)}]]>
+                <![CDATA[${var:exists(employeeId)}]]>
             </conditionExpression>
         </sequenceFlow>
         <serviceTask id="testService0" name="Gateway true"
                      flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler"/>
         <serviceTask id="testService1" name="Gateway false"
                      flowable:class="com.workflow.holidayRequest.handler.HolidayRejectionHandler"/>
+        <sequenceFlow sourceRef="testService0" targetRef="testEnd1" />
+        <sequenceFlow sourceRef="testService0" targetRef="testEnd1" />
+        <endEvent id="testEnd1"/>
         <!--
         <endEvent id="testEnd1"/>
         <endEvent id="testEnd12"/>

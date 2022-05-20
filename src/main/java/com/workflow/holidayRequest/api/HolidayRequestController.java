@@ -38,6 +38,11 @@ public class HolidayRequestController {
     public void addSubstitute(@PathVariable("taskId") String taskId, @PathVariable("employeeId") Integer employeeId) {
         holidayService.addSubstituteToHoliday(taskId, employeeId);
     }
+    @PostMapping("/employee/noSubstitute/tasks/{taskId}")
+    public void addNoSubstitute(@PathVariable("taskId") String taskId) {
+        holidayService.addSubstituteToHoliday(taskId, null);
+        //holidayService.addNoSubstituteToHoliday(taskId);
+    }
 
     @GetMapping("/superior/tasks")
     public List<TaskDetails> getSuperiorTasks() {

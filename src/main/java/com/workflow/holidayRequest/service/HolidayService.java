@@ -84,12 +84,14 @@ public class HolidayService {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("employeeId", employeeId);
         taskService.complete(taskId, variables);
-        Map<String, Object> testingVariables = taskService.getVariables(taskId);
-        System.out.println("Short test addSubstituteToHoliday");
+        //Map<String, Object> testingVariables = taskService.getVariables(taskId);
         /*
         Interesting Code examples:
         test = taskService.createTaskQuery().taskId(taskId).singleResult();
         Collection<String> currentVariables = taskService.getVariablesLocal((test.getId())).keySet();*/
+    }
+    public void addNoSubstituteToHoliday(String taskId) {
+        taskService.complete(taskId);
     }
 
 

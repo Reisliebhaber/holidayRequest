@@ -82,11 +82,11 @@ public class OldHolidayService {
 
     public void approveHoliday(String taskId, Boolean approved) {
 
-        Task test = taskService.createTaskQuery().taskId(taskId).singleResult();
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("approved", approved.booleanValue());
         taskService.complete(taskId, variables);
-        Map<String, Object> testingVariables = taskService.getVariables(taskId);
+        //Task test = taskService.createTaskQuery().taskId(taskId).singleResult();
+        //Map<String, Object> testingVariables = taskService.getVariables(taskId);
         /*
         test = taskService.createTaskQuery().taskId(taskId).singleResult();
         Collection<String> currentVariables = taskService.getVariablesLocal((test.getId())).keySet();*/
