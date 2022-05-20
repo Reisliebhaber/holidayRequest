@@ -79,6 +79,7 @@ public class HolidayService {
 
         return taskDetails;
     }
+
     public void addSubstitute(String taskId, Boolean approved) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
@@ -86,6 +87,19 @@ public class HolidayService {
         taskService.complete(taskId, variables);
     }
 
+    public List<TaskDetails> getSubstituteTasks() {
+        List<Task> tasks =
+                taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_SUBSTITUTE).list();
+        List<TaskDetails> taskDetails = getTaskDetails(tasks);
+
+        return taskDetails;
+    }
+
+    public void approveSubstituteTask(String taskId, Boolean approved) {
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put("approveSubstitution", approved.booleanValue());
+        taskService.complete(taskId, variables);
+    }
 
     public List<TaskDetails> getManagerTasks() {
         List<Task> tasks =
