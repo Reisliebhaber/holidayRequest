@@ -5,9 +5,6 @@ import com.workflow.holidayRequest.dto.HolidayRequest;
 import com.workflow.holidayRequest.dto.ProcessInstanceResponse;
 import com.workflow.holidayRequest.dto.TaskDetails;
 import com.workflow.holidayRequest.service.HolidayService;
-import com.workflow.oldDto.OldHolidayRequest;
-import com.workflow.oldDto.OldProcessInstanceResponse;
-import com.workflow.oldDto.OldTaskDetails;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,6 +35,7 @@ public class HolidayRequestController {
     public void addSubstitute(@PathVariable("taskId") String taskId, @PathVariable("withSubstitute") Boolean withSubstitute) {
         holidayService.addSubstitute(taskId, withSubstitute);
     }
+
     @GetMapping("/substitute/tasks")
     public List<TaskDetails> getSubstituteTasks() {
         return holidayService.getSubstituteTasks();
@@ -50,13 +48,12 @@ public class HolidayRequestController {
 
     @GetMapping("/superior/tasks")
     public List<TaskDetails> getSuperiorTasks() {
-        return holidayService.getManagerTasks();
+        return holidayService.getSuperiorTasks();
     }
 
-
-    @PostMapping("/manager/approve/tasks/{taskId}/{approved}")
-    public void approveTask(@PathVariable("taskId") String taskId, @PathVariable("withSubstitute") Boolean withSubstitute) {
-        holidayService.approveHoliday(taskId, withSubstitute);
+    @PostMapping("/superior/approve/tasks/{taskId}/{approve}")
+    public void approveTask(@PathVariable("taskId") String taskId, @PathVariable("approve") Boolean approve) {
+        holidayService.approveHoliday(taskId, approve);
     }
 
     @PostMapping("/user/accept/{taskId}")

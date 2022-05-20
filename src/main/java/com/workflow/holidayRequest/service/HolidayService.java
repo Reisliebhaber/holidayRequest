@@ -3,8 +3,6 @@ package com.workflow.holidayRequest.service;
 import com.workflow.holidayRequest.dto.HolidayRequest;
 import com.workflow.holidayRequest.dto.ProcessInstanceResponse;
 import com.workflow.holidayRequest.dto.TaskDetails;
-import com.workflow.oldDto.OldTaskDetails;
-import liquibase.pro.packaged.T;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -101,7 +99,7 @@ public class HolidayService {
         taskService.complete(taskId, variables);
     }
 
-    public List<TaskDetails> getManagerTasks() {
+    public List<TaskDetails> getSuperiorTasks() {
         List<Task> tasks =
                 taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_SUPERIOR).list();
         List<TaskDetails> taskDetails = getTaskDetails(tasks);
@@ -119,10 +117,10 @@ public class HolidayService {
     }
 
 
-    public void approveHoliday(String taskId, Boolean approved) {
+    public void approveHoliday(String taskId, Boolean approve) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("withSubstitute", approved.booleanValue());//TODO change variable
+        variables.put("approve", approve.booleanValue());//TODO change variable
         taskService.complete(taskId, variables);
         /*Map<String, Object> testingVariables = taskService.getVariables(taskId);
         System.out.println("Short test MAXIMILIAN");

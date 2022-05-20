@@ -14,6 +14,7 @@
         <userTask id="holidayRequest" name="Holiday Request"/>
         <sequenceFlow sourceRef="holidayRequest" targetRef="AddOneOrNoneSubstitute"/>
 
+        <!-- Employee Tasks -->
         <userTask id="AddOneOrNoneSubstitute" name="Add one or none substitute" flowable:candidateGroups="employee"/>
         <sequenceFlow sourceRef="AddOneOrNoneSubstitute" targetRef="gwWithOrWithoutSubstitute"/>
 
@@ -23,16 +24,18 @@
                 <![CDATA[${withSubstitute}]]>
             </conditionExpression>
         </sequenceFlow>
-        <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="testService1">
+        <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="taskRejectAcceptSuperior">
             <conditionExpression xsi:type="tFormalExpression">
                 <![CDATA[${!withSubstitute}]]>
             </conditionExpression>
         </sequenceFlow>
 
+        <!-- Substitute Tasks -->
         <userTask id="taskRejectAcceptSubstitution" name="Reject or Accept Substitution" flowable:candidateGroups="substitute"/>
         <sequenceFlow sourceRef="taskRejectAcceptSubstitution" targetRef="gwRejectOrAcceptSubstitution"/>
+
         <exclusiveGateway id="gwRejectOrAcceptSubstitution" name="Reject or Accept Substitution"/>
-        <sequenceFlow name="Acceptance" sourceRef="gwRejectOrAcceptSubstitution" targetRef="testService0"> <!-- taskRejectAcceptSuperior -->
+        <sequenceFlow name="Acceptance" sourceRef="gwRejectOrAcceptSubstitution" targetRef="taskRejectAcceptSuperior"> <!-- testService0 -->
             <conditionExpression xsi:type="tFormalExpression">
                 <![CDATA[${approveSubstitution}]]>
             </conditionExpression>
@@ -43,48 +46,47 @@
             </conditionExpression>
         </sequenceFlow>
 
+        <!-- Superior Tasks -->
+        <userTask id="taskRejectAcceptSuperior" name="Reject or Accept Holiday Request Superior" flowable:candidateGroups="superior"/>
+        <sequenceFlow sourceRef="taskRejectAcceptSuperior" targetRef="gwRejectOrAcceptSuperior"/>
 
-        <serviceTask id="testService0" name="Gateway true"
-                     flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler"/>
+        <exclusiveGateway id="gwRejectOrAcceptSuperior"/>
+        <sequenceFlow name="Approval" sourceRef="gwRejectOrAcceptSuperior" targetRef="parallelNotifyEmployeeHrDepartment"> <!-- testService0 -->
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${approve}]]>
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow name="Rejection" sourceRef="gwRejectOrAcceptSuperior" targetRef="testService1">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${!approve}]]>
+            </conditionExpression>
+        </sequenceFlow>
+
+        <!-- Notify HR Department & Employee -->
+        <parallelGateway id="parallelNotifyEmployeeHrDepartment"/>
+        <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment" targetRef="notifyHrDepartment"/>
+        <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment" targetRef="notifyEmployee"/>
+
+        <serviceTask id="notifyHrDepartment" name="Notify HR department"
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler" />
+        <sequenceFlow sourceRef="notifyHrDepartment" targetRef="notifyHrDepartmentEnd"/>
+        <endEvent id="notifyHrDepartmentEnd"/>
+
+        <serviceTask id="notifyEmployee" name="Notify Employee"
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler" />
+        <sequenceFlow sourceRef="notifyEmployee" targetRef="notifyEmployeeEnd"/>
+        <endEvent id="notifyEmployeeEnd"/>
+
         <serviceTask id="testService1" name="Gateway false"
                      flowable:class="com.workflow.holidayRequest.handler.HolidayRejectionHandler"/>
-        <sequenceFlow sourceRef="testService0" targetRef="testEnd1" />
-        <sequenceFlow sourceRef="testService1" targetRef="testEnd1" />
-        <endEvent id="testEnd1"/>
+
+        <sequenceFlow sourceRef="testService1" targetRef="rejectionEnd" />
+        <endEvent id="rejectionEnd"/>
         <!--
-        <sequenceFlow name="Rejection"
-                      sourceRef="gwRejectOrAcceptSubstitution" targetRef="endRejection"/>
-        <sequenceFlow sourceRef="testService0" targetRef="testEnd1" />
-        <endEvent id="testEnd1"/>
-        <endEvent id="testEnd12"/>
-        <endEvent id="endRejection"/>
-        <userTask id="taskRejectAcceptSuperior" name="Reject or Accept Holiday Request Superior"/>
-        <exclusiveGateway id="gwRejectOrAcceptSuperior"/>
-        <serviceTask id="notifyHrDepartment" name="Notify HR department"/>
-        <serviceTask id="notifyEmployee" name="Notify Employee"/>
-        <endEvent id="endNotifyEmployee"/>
-        <sequenceFlow sourceRef="taskRejectAcceptSuperior"
-                      targetRef="gwRejectOrAcceptSuperior"/>
-        <sequenceFlow name="Approval"
-                      sourceRef="gwRejectOrAcceptSuperior"
-                      targetRef="parallelNotifyEmployeeHrDepartment"/>
-        <sequenceFlow sourceRef="notifyEmployee"
-                      targetRef="endNotifyEmployee"/>
-        <endEvent id="endNotifyHrDepartment"/>
-        <sequenceFlow sourceRef="notifyHrDepartment"
-                      targetRef="endNotifyHrDepartment"/>
-        <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment"
-                      targetRef="notifyHrDepartment"/>
-        <parallelGateway id="parallelNotifyEmployeeHrDepartment"/>
-        <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment"
-                      targetRef="notifyEmployee"/>
-        <sequenceFlow name="without Substitute"
-                      sourceRef="gwWithOrWithoutSubstitute"
-                      targetRef="taskRejectAcceptSuperior"/>
-        <sequenceFlow name="with Substitute"
-                      sourceRef="gwWithOrWithoutSubstitute"
-                      targetRef="taskRejectAcceptSubstitution"/>
-        <sequenceFlow name="Rejection"
-                      sourceRef="gwRejectOrAcceptSuperior" targetRef="endRejection"/>-->
+        <serviceTask id="testService0" name="Gateway true"
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayApprovalHandler"/>
+        <sequenceFlow sourceRef="testService0" targetRef="rejectionEnd" />
+        <sequenceFlow sourceRef="testService0" targetRef="rejectionEnd" />
+        -->
     </process>
 </definitions>
