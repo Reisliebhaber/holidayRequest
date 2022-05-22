@@ -1,6 +1,5 @@
 package com.workflow.holidayRequest.api;
 
-import com.workflow.holidayRequest.OldHolidayService;
 import com.workflow.holidayRequest.dto.HolidayRequest;
 import com.workflow.holidayRequest.dto.ProcessInstanceResponse;
 import com.workflow.holidayRequest.dto.Details;
@@ -17,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class HolidayRequestController {
     HolidayService holidayService;
-    OldHolidayService oldHolidayService;//todo delete
 
     //********************************************************** deployment & process endpoints **************************************
     @PostMapping("/holiday/apply")
@@ -63,9 +61,5 @@ public class HolidayRequestController {
     @GetMapping("/department/hr/holidayrequest/closed")
     public List<Details> getClosedHolidayRequests() {
         return holidayService.fetchClosedHolidayRequests();
-    }
-    @GetMapping("/process/{processId}")
-    public void checkState(@PathVariable("processId") String processId){
-        holidayService.checkProcessHistory(processId);
     }
 }

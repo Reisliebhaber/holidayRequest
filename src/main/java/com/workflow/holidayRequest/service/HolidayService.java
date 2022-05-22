@@ -25,34 +25,30 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class HolidayService {
+
+    //********************************************************** Constants **********************************************************
     public static final String PROCESS_DEFINITION_KEY = "holidayRequestWorkflow";
     public static final String TASK_CANDIDATE_GROUP_SUPERIOR = "superior";
     public static final String TASK_CANDIDATE_GROUP_SUBSTITUTE = "substitute";
     public static final String TASK_CANDIDATE_GROUP_EMPLOYEE = "employee";
-    public static final String TASK_CANDIDATE_GROUP_APPROVED = "approvedHolidayRequests";
     public static final String EMP_NAME = "empName";
     public static final String ACT_TYPE_END_EVENT = "endEvent";// HistoryService
     public static final String ACT_ID_NOTIFY_EMPLOYEE_END = "notifyEmployeeEnd";// HistoryService
 
-    //********************************************************** **********************************************************
+    //********************************************************** Flowable Services **********************************************************
     RuntimeService runtimeService;
     TaskService taskService;
-    ProcessEngine processEngine;
     RepositoryService repositoryService;
     HistoryService historyService;
-
 
     //********************************************************** deployment service methods **********************************************************
 
     public void deployProcessDefinition() {
-
         Deployment deployment =
                 repositoryService
                         .createDeployment()
-                        .addClasspathResource("processes/holiday-request.bpmn20.xml")
+                        .addClasspathResource("processes/holidayRequest.bpmn20.xml")
                         .deploy();
-
-
     }
 
 
@@ -138,24 +134,6 @@ public class HolidayService {
         List<Details> taskDetails = getTaskDetails(tasks);
 
         return taskDetails;
-    }
-
-    /**
-     * TODO remove
-     *
-     * @param processId
-     */
-    public void checkProcessHistory(String processId) {
-
-        HistoryService historyService = processEngine.getHistoryService();
-        List<Details> closedHolidayRequests = fetchClosedHolidayRequests();
-        List<Details> employeeHolidayRequests = fetchEmployeeHolidayRequests();
-
-        for (HistoricActivityInstance activity : activities) {
-            System.out.println(activity.getActivityId() + " took " + activity.getDurationInMillis() + " milliseconds");
-        }
-
-        System.out.println("\n \n \n \n");
     }
 
     public List<Details> fetchClosedHolidayRequests() {
