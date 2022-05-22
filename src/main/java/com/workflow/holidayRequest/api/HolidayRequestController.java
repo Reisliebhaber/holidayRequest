@@ -3,7 +3,7 @@ package com.workflow.holidayRequest.api;
 import com.workflow.holidayRequest.OldHolidayService;
 import com.workflow.holidayRequest.dto.HolidayRequest;
 import com.workflow.holidayRequest.dto.ProcessInstanceResponse;
-import com.workflow.holidayRequest.dto.TaskDetails;
+import com.workflow.holidayRequest.dto.Details;
 import com.workflow.holidayRequest.service.HolidayService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class HolidayRequestController {
     }
 
     @GetMapping("/employee/tasks")
-    public List<TaskDetails> getEmployeeTasks() {
+    public List<Details> getEmployeeTasks() {
         return holidayService.getEmployeeTasks();
     }
 
@@ -37,7 +37,7 @@ public class HolidayRequestController {
     }
 
     @GetMapping("/substitute/tasks")
-    public List<TaskDetails> getSubstituteTasks() {
+    public List<Details> getSubstituteTasks() {
         return holidayService.getSubstituteTasks();
     }
 
@@ -47,7 +47,7 @@ public class HolidayRequestController {
     }
 
     @GetMapping("/superior/tasks")
-    public List<TaskDetails> getSuperiorTasks() {
+    public List<Details> getSuperiorTasks() {
         return holidayService.getSuperiorTasks();
     }
 
@@ -56,14 +56,16 @@ public class HolidayRequestController {
         holidayService.approveHoliday(taskId, approve);
     }
 
-    @PostMapping("/user/accept/{taskId}")
-    public void acceptHoliday(@PathVariable("taskId") String taskId) {
-        oldHolidayService.acceptHoliday(taskId);
+    @GetMapping("/employee/holidays/approved")
+    public List<Details> getApprovedHolidayRequests() {
+        return holidayService.fetchEmployeeHolidayRequests();
     }
-
-    @GetMapping("/user/tasks")
-    public List<TaskDetails> getUserTasks() {
-        return holidayService.getUserTasks();
+    @GetMapping("/department/hr/holidayrequest/closed")
+    public List<Details> getClosedHolidayRequests() {
+        return holidayService.fetchClosedHolidayRequests();
     }
-
+    @GetMapping("/process/{processId}")
+    public void checkState(@PathVariable("processId") String processId){
+        holidayService.checkProcessHistory(processId);
+    }
 }

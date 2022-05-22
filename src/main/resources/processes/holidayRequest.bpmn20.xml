@@ -40,7 +40,7 @@
                 <![CDATA[${approveSubstitution}]]>
             </conditionExpression>
         </sequenceFlow>
-        <sequenceFlow sourceRef="gwRejectOrAcceptSubstitution" targetRef="testService1">
+        <sequenceFlow sourceRef="gwRejectOrAcceptSubstitution" targetRef="holidayRejection">
             <conditionExpression xsi:type="tFormalExpression">
                 <![CDATA[${!approveSubstitution}]]>
             </conditionExpression>
@@ -56,7 +56,7 @@
                 <![CDATA[${approve}]]>
             </conditionExpression>
         </sequenceFlow>
-        <sequenceFlow name="Rejection" sourceRef="gwRejectOrAcceptSuperior" targetRef="testService1">
+        <sequenceFlow name="Rejection" sourceRef="gwRejectOrAcceptSuperior" targetRef="holidayRejection">
             <conditionExpression xsi:type="tFormalExpression">
                 <![CDATA[${!approve}]]>
             </conditionExpression>
@@ -68,6 +68,7 @@
         <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment" targetRef="notifyEmployee"/>
 
         <serviceTask id="notifyHrDepartment" name="Notify HR department"
+                     flowable:candidateGroups="hrDepartment"
                      flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyHR" />
         <sequenceFlow sourceRef="notifyHrDepartment" targetRef="notifyHrDepartmentEnd"/>
         <endEvent id="notifyHrDepartmentEnd"/>
@@ -77,12 +78,13 @@
         <sequenceFlow sourceRef="notifyEmployee" targetRef="notifyEmployeeEnd"/>
         <endEvent id="notifyEmployeeEnd"/>
 
-        <serviceTask id="testService1" name="Gateway false"
+        <serviceTask id="holidayRejection" name="Holiday Request Rejection"
                      flowable:class="com.workflow.holidayRequest.handler.HolidayRejectionHandler"/>
 
-        <sequenceFlow sourceRef="testService1" targetRef="rejectionEnd" />
+        <sequenceFlow sourceRef="holidayRejection" targetRef="rejectionEnd" />
         <endEvent id="rejectionEnd"/>
         <!--
+                     flowable:candidateGroups="hrDepartment""
         <serviceTask id="testService0" name="Gateway true"
                      flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyEmployee"/>
         <sequenceFlow sourceRef="testService0" targetRef="rejectionEnd" />
