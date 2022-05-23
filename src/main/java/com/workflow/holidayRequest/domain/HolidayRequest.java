@@ -1,4 +1,4 @@
-package com.workflow.holidayRequest.dto;
+package com.workflow.holidayRequest.domain;
 
 import lombok.Data;
 
