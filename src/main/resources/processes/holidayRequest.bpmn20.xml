@@ -83,12 +83,5 @@
 
         <sequenceFlow sourceRef="holidayRejection" targetRef="rejectionEnd" />
         <endEvent id="rejectionEnd"/>
-        <!--
-                     flowable:candidateGroups="hrDepartment""
-        <serviceTask id="testService0" name="Gateway true"
-                     flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyEmployee"/>
-        <sequenceFlow sourceRef="testService0" targetRef="rejectionEnd" />
-        <sequenceFlow sourceRef="testService0" targetRef="rejectionEnd" />
-        -->
     </process>
 </definitions>
