@@ -7,11 +7,11 @@ import java.time.LocalDate;
 @Data
 public class HolidayRequest {
 
-    String empName;
+    private String empName;
 
-    Long noOfHolidays;
+    private Long noOfHolidays;
 
-    String requestDescription;
+    private String requestDescription;
 
-    LocalDate startingDate;
+    private LocalDate startingDate;
 }

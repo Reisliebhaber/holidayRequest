@@ -6,6 +6,6 @@ import lombok.Value;
 @Value
 @AllArgsConstructor
 public class ProcessInstanceResponse {
-    String processId;
-    boolean isEnded;
+    private String processId;
+    private boolean isEnded;
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 public class Details {
-    String detailId;
-    String detailName;
-    Map<String, Object> detailData;
+    private String detailId;
+    private String detailName;
+    private Map<String, Object> detailData;
 }
