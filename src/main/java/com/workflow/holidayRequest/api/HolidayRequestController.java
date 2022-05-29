@@ -1,6 +1,6 @@
 package com.workflow.holidayRequest.api;
 
-import com.workflow.holidayRequest.domain.HolidayRequest;
+import com.workflow.holidayRequest.dto.HolidayRequest;
 import com.workflow.holidayRequest.dto.ProcessInstanceResponse;
 import com.workflow.holidayRequest.dto.Details;
 import com.workflow.holidayRequest.service.HolidayService;

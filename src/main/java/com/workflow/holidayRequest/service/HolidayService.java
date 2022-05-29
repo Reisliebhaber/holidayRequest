@@ -1,6 +1,6 @@
 package com.workflow.holidayRequest.service;
 
-import com.workflow.holidayRequest.domain.HolidayRequest;
+import com.workflow.holidayRequest.dto.HolidayRequest;
 import com.workflow.holidayRequest.dto.ProcessInstanceResponse;
 import com.workflow.holidayRequest.dto.Details;
 import lombok.AccessLevel;
@@ -119,14 +119,6 @@ public class HolidayService {
 
     public void acceptHoliday(String taskId) {
         taskService.complete(taskId);
-    }
-
-
-    public List<Details> getUserTasks() {
-
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(EMP_NAME).list();
-
-        return getTaskDetails(tasks);
     }
 
     public List<Details> fetchClosedHolidayRequests() {
