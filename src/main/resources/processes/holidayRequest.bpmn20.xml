@@ -12,7 +12,8 @@
         <sequenceFlow sourceRef="holidayRequest" targetRef="AddOneOrNoneSubstitute"/>
 
         <!-- Employee Tasks -->
-        <userTask id="AddOneOrNoneSubstitute" name="Add one or none substitute" flowable:candidateGroups="employee"/>
+        <userTask id="AddOneOrNoneSubstitute" name="Add one or none substitute"
+                  flowable:candidateGroups="employee"/>
         <sequenceFlow sourceRef="AddOneOrNoneSubstitute" targetRef="gwWithOrWithoutSubstitute"/>
 
         <exclusiveGateway id="gwWithOrWithoutSubstitute" name="with or without Substitute"/>
@@ -28,7 +29,8 @@
         </sequenceFlow>
 
         <!-- Substitute Tasks -->
-        <userTask id="taskRejectAcceptSubstitution" name="Reject or Accept Substitution" flowable:candidateGroups="substitute"/>
+        <userTask id="taskRejectAcceptSubstitution" name="Reject or Accept Substitution"
+                  flowable:candidateGroups="substitute"/>
         <sequenceFlow sourceRef="taskRejectAcceptSubstitution" targetRef="gwRejectOrAcceptSubstitution"/>
 
         <exclusiveGateway id="gwRejectOrAcceptSubstitution" name="Reject or Accept Substitution"/>
@@ -44,7 +46,8 @@
         </sequenceFlow>
 
         <!-- Superior Tasks -->
-        <userTask id="taskRejectAcceptSuperior" name="Reject or Accept Holiday Request Superior" flowable:candidateGroups="superior"/>
+        <userTask id="taskRejectAcceptSuperior" name="Reject or Accept Holiday Request Superior"
+                  flowable:candidateGroups="superior"/>
         <sequenceFlow sourceRef="taskRejectAcceptSuperior" targetRef="gwRejectOrAcceptSuperior"/>
 
         <exclusiveGateway id="gwRejectOrAcceptSuperior"/>
@@ -65,7 +68,6 @@
         <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment" targetRef="notifyEmployee"/>
 
         <serviceTask id="notifyHrDepartment" name="Notify HR department"
-                     flowable:candidateGroups="hrDepartment"
                      flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyHR" />
         <sequenceFlow sourceRef="notifyHrDepartment" targetRef="notifyHrDepartmentEnd"/>
         <endEvent id="notifyHrDepartmentEnd"/>

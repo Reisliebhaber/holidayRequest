@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ *
+ */
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -31,7 +34,6 @@ public class HolidayService {
     public static final String TASK_CANDIDATE_GROUP_SUPERIOR = "superior";
     public static final String TASK_CANDIDATE_GROUP_SUBSTITUTE = "substitute";
     public static final String TASK_CANDIDATE_GROUP_EMPLOYEE = "employee";
-    public static final String EMP_NAME = "empName";
     public static final String ACT_TYPE_END_EVENT = "endEvent";// HistoryService
     public static final String ACT_ID_NOTIFY_EMPLOYEE_END = "notifyEmployeeEnd";// HistoryService
 
@@ -43,6 +45,9 @@ public class HolidayService {
 
     //********************************************************** deployment service methods **********************************************************
 
+    /**
+     *
+     */
     public void deployProcessDefinition() {
         Deployment deployment =
                 repositoryService
@@ -54,6 +59,11 @@ public class HolidayService {
 
     //********************************************************** process service methods **********************************************************
 
+    /**
+     *
+     * @param holidayRequest
+     * @return
+     */
     public ProcessInstanceResponse applyHoliday(HolidayRequest holidayRequest) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("employee", holidayRequest.getEmpName());
@@ -68,12 +78,21 @@ public class HolidayService {
         return new ProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Details> getEmployeeTasks() {
         List<Task> tasks =
                 taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_EMPLOYEE).list();
         return getTaskDetails(tasks);
     }
 
+    /**
+     *
+     * @param taskId
+     * @param approved
+     */
     public void addSubstitute(String taskId, Boolean approved) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
@@ -81,18 +100,31 @@ public class HolidayService {
         taskService.complete(taskId, variables);
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Details> getSubstituteTasks() {
         List<Task> tasks =
                 taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_SUBSTITUTE).list();
         return getTaskDetails(tasks);
     }
 
+    /**
+     *
+     * @param taskId
+     * @param approved
+     */
     public void approveSubstituteTask(String taskId, Boolean approved) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("approveSubstitution", approved);
         taskService.complete(taskId, variables);
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Details> getSuperiorTasks() {
         List<Task> tasks =
                 taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_SUPERIOR).list();
@@ -100,6 +132,11 @@ public class HolidayService {
         return getTaskDetails(tasks);
     }
 
+    /**
+     *
+     * @param tasks
+     * @return
+     */
     private List<Details> getTaskDetails(List<Task> tasks) {
         List<Details> taskDetails = new ArrayList<>();
         for (Task task : tasks) {
@@ -108,8 +145,11 @@ public class HolidayService {
         }
         return taskDetails;
     }
-
-
+    /**
+     *
+     * @param taskId
+     * @param approve
+     */
     public void approveHoliday(String taskId, Boolean approve) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
@@ -117,15 +157,22 @@ public class HolidayService {
         taskService.complete(taskId, variables);
     }
 
+    /**
+     *
+     * @param taskId
+     */
     public void acceptHoliday(String taskId) {
         taskService.complete(taskId);
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Details> fetchClosedHolidayRequests() {
         List<String> processInstanceIds = historyService
                 .createHistoricActivityInstanceQuery()
                 .finished()
-                .activityType(ACT_TYPE_END_EVENT)
                 .list()
                 .stream()
                 .map(HistoricActivityInstance::getProcessInstanceId)
@@ -134,11 +181,14 @@ public class HolidayService {
         return fetchHistoricActivityInstanceDetails(processInstanceIds);
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Details> fetchEmployeeHolidayRequests() {
         List<String> processInstanceIds = historyService.createHistoricActivityInstanceQuery()
                 .finished()
                 .activityId(ACT_ID_NOTIFY_EMPLOYEE_END)
-                .activityType(ACT_TYPE_END_EVENT)
                 .list().stream()
                 .map(HistoricActivityInstance::getProcessInstanceId)
                 .distinct()
@@ -146,6 +196,11 @@ public class HolidayService {
         return fetchHistoricActivityInstanceDetails(processInstanceIds);
     }
 
+    /**
+     *
+     * @param processInstanceIds
+     * @return
+     */
     private List<Details> fetchHistoricActivityInstanceDetails(List<String> processInstanceIds) {
         List<Details> activityDetails = new ArrayList<>();
         String detailName;
@@ -167,4 +222,3 @@ public class HolidayService {
         return activityDetails;
     }
 }
-
