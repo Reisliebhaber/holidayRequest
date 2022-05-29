@@ -109,8 +109,8 @@ public class HolidayService {
     private List<Details> getTaskDetails(List<Task> tasks) {
         List<Details> taskDetails = new ArrayList<>();
         for (Task task : tasks) {
-            Map<String, Object> processVariables = taskService.getVariables(task.getId());
-            taskDetails.add(new Details(task.getId(), task.getName(), processVariables));
+            Map<String, Object> variables = taskService.getVariables(task.getId());
+            taskDetails.add(new Details(task.getId(), task.getName(), variables));
         }
         return taskDetails;
     }

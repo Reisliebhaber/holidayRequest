@@ -8,10 +8,7 @@ import java.time.LocalDate;
 public class HolidayRequest {
 
     private String empName;
-
     private Long noOfHolidays;
-
     private String requestDescription;
-
     private LocalDate startingDate;
 }
