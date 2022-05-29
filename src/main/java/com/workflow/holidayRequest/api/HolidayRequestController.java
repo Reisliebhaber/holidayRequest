@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- *
+ * Controller Class for Holiday Request API
  */
 @RestController
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -23,9 +23,9 @@ public class HolidayRequestController {
     //********************************************************** deployment & process endpoints **************************************
 
     /**
-     *
-     * @param holidayRequest
-     * @return
+     * Method to apply a Holiday, needs an HolidayRequest Object to apply holiday.
+     * @param holidayRequest HolidayRequest Object to apply a holiday for
+     * @return ProcessInstanceResponse Object including the processId for the Request and the information whether the process is already finished.
      */
     @PostMapping("/holiday/apply")
     public ProcessInstanceResponse applyHoliday(@RequestBody HolidayRequest holidayRequest) {
@@ -34,8 +34,8 @@ public class HolidayRequestController {
     }
 
     /**
-     *
-     * @return
+     * Returns all tasks which are currently available to the employee candidate group.
+     * @return A list of tasks including, the taskId, taskName and the relevant Holiday Request parameters.
      */
     @GetMapping("/employee/tasks")
     public List<Details> getEmployeeTasks() {
@@ -43,7 +43,9 @@ public class HolidayRequestController {
     }
 
     /**
-     *
+     * Adds information whether a substitute is included in the holiday request or not.
+     * Therefore, the taskId of the task has to be given and the information whether a substitute is included has to be given as a boolean too.
+     * Both has to be included as a path-variable.
      * @param taskId
      * @param withSubstitute
      */
@@ -53,8 +55,8 @@ public class HolidayRequestController {
     }
 
     /**
-     *
-     * @return
+     * Returns all tasks which are currently available to the substitute candidate group.
+     * @return A list of tasks including, the taskId, taskName and the relevant Holiday Request parameters.
      */
     @GetMapping("/substitute/tasks")
     public List<Details> getSubstituteTasks() {
@@ -62,7 +64,9 @@ public class HolidayRequestController {
     }
 
     /**
-     *
+     * Adds information whether the substitute has approved the substitution for the holiday request or not.
+     * Therefore, the taskId of the task has to be given and the information whether the substitute has approved the substitution or not has to be given as a boolean too.
+     * Both has to be included as a path-variable.
      * @param taskId
      * @param approveSubstitution
      */
@@ -72,8 +76,8 @@ public class HolidayRequestController {
     }
 
     /**
-     *
-     * @return
+     * Returns all tasks which are currently available to the superior candidate group.
+     * @return A list of tasks including, the taskId, taskName and the relevant Holiday Request parameters.
      */
     @GetMapping("/superior/tasks")
     public List<Details> getSuperiorTasks() {
@@ -81,7 +85,8 @@ public class HolidayRequestController {
     }
 
     /**
-     *
+     * Adds information whether the superior has approved the holiday request or not.
+     * Therefore, the taskId of the task has to be given and the information whether the superior has approved the holiday request or not has to be given as a boolean too.
      * @param taskId
      * @param approve
      */
@@ -91,8 +96,8 @@ public class HolidayRequestController {
     }
 
     /**
-     *
-     * @return
+     * Returns all holiday requests which are currently available to the HR-department.
+     * @return A list of tasks including, the taskId, taskName and the relevant Holiday Request parameters.
      */
     @GetMapping("/employee/holidays/approved")
     public List<Details> getApprovedHolidayRequests() {
@@ -100,8 +105,8 @@ public class HolidayRequestController {
     }
 
     /**
-     *
-     * @return
+     * Returns all approved holiday requests which are currently available to the employee.
+     * @return A list of tasks including, the taskId, taskName and the relevant Holiday Request parameters.
      */
     @GetMapping("/department/hr/holidayrequest/closed")
     public List<Details> getClosedHolidayRequests() {
