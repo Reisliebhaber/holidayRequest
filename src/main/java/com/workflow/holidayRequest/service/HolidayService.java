@@ -55,7 +55,6 @@ public class HolidayService {
     //********************************************************** process service methods **********************************************************
 
     public ProcessInstanceResponse applyHoliday(HolidayRequest holidayRequest) {
-
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("employee", holidayRequest.getEmpName());
         variables.put("noOfHolidays", holidayRequest.getNoOfHolidays());
@@ -66,46 +65,41 @@ public class HolidayService {
                 runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
         Task holidayRequestTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
         taskService.complete(holidayRequestTask.getId(), variables);
-        ProcessInstanceResponse response = new ProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
-        return response;
+        return new ProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
     }
 
     public List<Details> getEmployeeTasks() {
         List<Task> tasks =
                 taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_EMPLOYEE).list();
-        List<Details> taskDetails = getTaskDetails(tasks);
-
-        return taskDetails;
+        return getTaskDetails(tasks);
     }
 
     public void addSubstitute(String taskId, Boolean approved) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("withSubstitute", approved.booleanValue());
+        variables.put("withSubstitute", approved);
         taskService.complete(taskId, variables);
     }
 
     public List<Details> getSubstituteTasks() {
         List<Task> tasks =
                 taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_SUBSTITUTE).list();
-        List<Details> taskDetails = getTaskDetails(tasks);
-
-        return taskDetails;
+        return getTaskDetails(tasks);
     }
 
     public void approveSubstituteTask(String taskId, Boolean approved) {
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("approveSubstitution", approved.booleanValue());
+        variables.put("approveSubstitution", approved);
         taskService.complete(taskId, variables);
     }
 
     public List<Details> getSuperiorTasks() {
         List<Task> tasks =
                 taskService.createTaskQuery().taskCandidateGroup(TASK_CANDIDATE_GROUP_SUPERIOR).list();
-        List<Details> taskDetails = getTaskDetails(tasks);
 
-        return taskDetails;
+        return getTaskDetails(tasks);
     }
+
     private List<Details> getTaskDetails(List<Task> tasks) {
         List<Details> taskDetails = new ArrayList<>();
         for (Task task : tasks) {
@@ -119,7 +113,7 @@ public class HolidayService {
     public void approveHoliday(String taskId, Boolean approve) {
 
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put("approve", approve.booleanValue());
+        variables.put("approve", approve);
         taskService.complete(taskId, variables);
     }
 
@@ -131,9 +125,8 @@ public class HolidayService {
     public List<Details> getUserTasks() {
 
         List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(EMP_NAME).list();
-        List<Details> taskDetails = getTaskDetails(tasks);
 
-        return taskDetails;
+        return getTaskDetails(tasks);
     }
 
     public List<Details> fetchClosedHolidayRequests() {
