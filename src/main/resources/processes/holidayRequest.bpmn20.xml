@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler"
+             exporterVersion="6.7.2">
+    <process id="holidayRequestWorkflow" name="holidayRequestWorkflow" isExecutable="true">
+        <documentation>Workflow for an holiday request of an employee.</documentation>
+        <startEvent id="startEvent"/>
+        <sequenceFlow sourceRef="startEvent" targetRef="holidayRequest"/>
+        <userTask id="holidayRequest" name="Holiday Request"/>
+        <sequenceFlow sourceRef="holidayRequest" targetRef="AddOneOrNoneSubstitute"/>
+
+        <!-- Employee Tasks -->
+        <userTask id="AddOneOrNoneSubstitute" name="Add one or none substitute"
+                  flowable:candidateGroups="employee"/>
+        <sequenceFlow sourceRef="AddOneOrNoneSubstitute" targetRef="gwWithOrWithoutSubstitute"/>
+
+        <exclusiveGateway id="gwWithOrWithoutSubstitute" name="with or without Substitute"/>
+        <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="taskRejectAcceptSubstitution">
+            <conditionExpression>
+                ${withSubstitute}
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="gwWithOrWithoutSubstitute" targetRef="taskRejectAcceptSuperior">
+            <conditionExpression>
+                ${!withSubstitute}
+            </conditionExpression>
+        </sequenceFlow>
+
+        <!-- Substitute Tasks -->
+        <userTask id="taskRejectAcceptSubstitution" name="Reject or Accept Substitution"
+                  flowable:candidateGroups="substitute"/>
+        <sequenceFlow sourceRef="taskRejectAcceptSubstitution" targetRef="gwRejectOrAcceptSubstitution"/>
+
+        <exclusiveGateway id="gwRejectOrAcceptSubstitution" name="Reject or Accept Substitution"/>
+        <sequenceFlow name="Acceptance" sourceRef="gwRejectOrAcceptSubstitution" targetRef="taskRejectAcceptSuperior"> <!-- testService0 -->
+            <conditionExpression>
+                ${approveSubstitution}
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="gwRejectOrAcceptSubstitution" targetRef="holidayRejection">
+            <conditionExpression>
+                ${!approveSubstitution}
+            </conditionExpression>
+        </sequenceFlow>
+
+        <!-- Superior Tasks -->
+        <userTask id="taskRejectAcceptSuperior" name="Reject or Accept Holiday Request Superior"
+                  flowable:candidateGroups="superior"/>
+        <sequenceFlow sourceRef="taskRejectAcceptSuperior" targetRef="gwRejectOrAcceptSuperior"/>
+
+        <exclusiveGateway id="gwRejectOrAcceptSuperior"/>
+        <sequenceFlow name="Approval" sourceRef="gwRejectOrAcceptSuperior" targetRef="parallelNotifyEmployeeHrDepartment"> <!-- testService0 -->
+            <conditionExpression >
+                ${approve}
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow name="Rejection" sourceRef="gwRejectOrAcceptSuperior" targetRef="holidayRejection">
+            <conditionExpression >
+                ${!approve}
+            </conditionExpression>
+        </sequenceFlow>
+
+        <!-- Notify HR Department & Employee -->
+        <parallelGateway id="parallelNotifyEmployeeHrDepartment"/>
+        <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment" targetRef="notifyHrDepartment"/>
+        <sequenceFlow sourceRef="parallelNotifyEmployeeHrDepartment" targetRef="notifyEmployee"/>
+
+        <serviceTask id="notifyHrDepartment" name="Notify HR department"
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyHR" />
+        <sequenceFlow sourceRef="notifyHrDepartment" targetRef="notifyHrDepartmentEnd"/>
+        <endEvent id="notifyHrDepartmentEnd"/>
+
+        <serviceTask id="notifyEmployee" name="Notify Employee"
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayNotifyEmployee" />
+        <sequenceFlow sourceRef="notifyEmployee" targetRef="notifyEmployeeEnd"/>
+        <endEvent id="notifyEmployeeEnd"/>
+
+        <serviceTask id="holidayRejection" name="Holiday Request Rejection"
+                     flowable:class="com.workflow.holidayRequest.handler.HolidayRejectionHandler"/>
+
+        <sequenceFlow sourceRef="holidayRejection" targetRef="rejectionEnd" />
+        <endEvent id="rejectionEnd"/>
+    </process>
+</definitions>
